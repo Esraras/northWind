@@ -1,23 +1,36 @@
 package kodlamaio.northwind.business.concretes;
 
 import kodlamaio.northwind.business.abstracts.ProductService;
+import kodlamaio.northwind.core.utilities.results.DataResult;
+import kodlamaio.northwind.core.utilities.results.Result;
+import kodlamaio.northwind.core.utilities.results.SuccessDataResult;
+import kodlamaio.northwind.core.utilities.results.SuccessResult;
 import kodlamaio.northwind.dataAccess.abstracts.ProductDao;
 import kodlamaio.northwind.entity.concretes.Product;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
 
+@Service
 public class ProductManager implements ProductService {
+
+    private ProductDao productDao;
 
     @Autowired // Bağımlılık oluşturur.
     public ProductManager(ProductDao productDao) {
         this.productDao = productDao;
     }
 
-    private ProductDao productDao;
-
     @Override
-    public List<Product> getAll() {
-        return null;
+    public DataResult<List<Product>> getAll() {
+        return new SuccessDataResult<List<Product>>( this.productDao.findAll(), "Data listelendi");
+
+    }
+
+    public Result add(Product product) {
+        this.productDao.save(product);
+        return new SuccessResult("Ürün eklendi.");
     }
 }
